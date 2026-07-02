@@ -1,51 +1,44 @@
 {% extends "base.html" %}
-{% block title %}Reports | Fitness Progress Tracker{% endblock %}
+{% block title %}Views | Fitness Progress Tracker{% endblock %}
 {% block content %}
 <section class="page-heading">
-    <p class="eyebrow">Joins + Aggregate Functions</p>
-    <h1>Reports</h1>
-    <p>These queries summarize the database with GROUP BY, AVG, SUM, COUNT, and LEFT JOIN.</p>
+    <p class="eyebrow">Database Views</p>
+    <h1>Views</h1>
+    <p>These tables read directly from the views already created in MySQL.</p>
 </section>
 
-<section class="report-grid">
+<section class="stack">
     <div class="panel">
-        <div class="section-title"><h2>Total Workout Minutes and Calories</h2></div>
+        <div class="section-title"><h2>Workout_Summary</h2><p>Total workout minutes and average calories per user.</p></div>
         <div class="table-wrap">
-            <table><thead><tr><th>User</th><th>Total Minutes</th><th>Total Calories Burned</th></tr></thead><tbody>
-                {% for row in workout_totals %}
-                <tr><td>{{ row.full_name }}</td><td>{{ row.total_minutes }}</td><td>{{ row.total_calories_burned }}</td></tr>
+            <table><thead><tr><th>User ID</th><th>Name</th><th>Total Minutes</th><th>Average Calories Burned</th></tr></thead><tbody>
+                {% for row in workout_summary %}
+                <tr><td>{{ row.user_id }}</td><td>{{ row.full_name }}</td><td>{{ row.total_minutes }}</td><td>{{ row.avg_calories_burned or "N/A" }}</td></tr>
                 {% endfor %}
             </tbody></table>
         </div>
     </div>
+
     <div class="panel">
-        <div class="section-title"><h2>Average Sleep Per User</h2></div>
+        <div class="section-title"><h2>Workout_and_Sleep_Correlation</h2><p>Workout and sleep records from matching dates.</p></div>
         <div class="table-wrap">
-            <table><thead><tr><th>User</th><th>Average Hours</th><th>Average Quality</th></tr></thead><tbody>
-                {% for row in sleep_averages %}
-                <tr><td>{{ row.full_name }}</td><td>{{ row.avg_sleep_hours or "N/A" }}</td><td>{{ row.avg_quality_score or "N/A" }}</td></tr>
+            <table><thead><tr><th>User</th><th>Sleep Date</th><th>Hours</th><th>Quality</th><th>Exercise</th><th>Minutes</th><th>Intensity</th><th>Calories</th></tr></thead><tbody>
+                {% for row in sleep_correlation %}
+                <tr>
+                    <td>{{ row.full_name }}</td><td>{{ row.sleep_date }}</td><td>{{ row.duration_hours }}</td><td>{{ row.quality_score }}</td>
+                    <td>{{ row.exercise_type }}</td><td>{{ row.duration_minutes }}</td><td>{{ row.intensity_level }}</td><td>{{ row.calories_burned or "N/A" }}</td>
+                </tr>
                 {% endfor %}
             </tbody></table>
         </div>
     </div>
+
     <div class="panel">
-        <div class="section-title"><h2>Food Category Counts</h2></div>
+        <div class="section-title"><h2>Gained_and_Burned_Calories</h2><p>Calories eaten and burned on the same day.</p></div>
         <div class="table-wrap">
-            <table><thead><tr><th>Category</th><th>Count</th></tr></thead><tbody>
-                {% for row in food_categories %}
-                <tr><td>{{ row.category }}</td><td>{{ row.total_per_category }}</td></tr>
-                {% endfor %}
-            </tbody></table>
-        </div>
-    </div>
-    <div class="panel">
-        <div class="section-title"><h2>Users With No Habits</h2></div>
-        <div class="table-wrap">
-            <table><thead><tr><th>User</th><th>Email</th></tr></thead><tbody>
-                {% for row in users_without_habits %}
-                <tr><td>{{ row.full_name }}</td><td>{{ row.email }}</td></tr>
-                {% else %}
-                <tr><td colspan="2">Every user currently has at least one habit.</td></tr>
+            <table><thead><tr><th>User</th><th>Workout Date</th><th>Calories Total</th><th>Calories Burned</th></tr></thead><tbody>
+                {% for row in calories %}
+                <tr><td>{{ row.full_name }}</td><td>{{ row.workout_date }}</td><td>{{ row.calories_total }}</td><td>{{ row.calories_burned }}</td></tr>
                 {% endfor %}
             </tbody></table>
         </div>
